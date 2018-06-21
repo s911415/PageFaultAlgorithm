@@ -468,7 +468,7 @@ public class PageFaultAlgorithm {
                 }
                 // Found a victim frame, replace its reference and set its use bit
                 frames[victim].reference = reference;
-                frames[victim].usebit = 1;
+                frames[victim].usebit = 0;
                 // Choose next victim
                 victim = (victim + 1) % numberOfFrames;
 
@@ -477,7 +477,7 @@ public class PageFaultAlgorithm {
             }
             for (int i = 0; i < numberOfFrames; ++i) {
                 final Frame frame = frames[i];
-                System.out.printf("\tFrame %d%s:%n\t\tReference: %s%n\t\tUse Bit: %d%n", i + 1, (i == victim) ? "(victim)" : "", frame.reference, frame.usebit);
+                System.out.printf("\tFrame %d%s:%n\t\tReference: %s%n\t\tReference Bit: %d%n", i + 1, (i == victim) ? "(victim)" : "", frame.reference, frame.usebit);
             }
             System.out.printf("%n");
         }
