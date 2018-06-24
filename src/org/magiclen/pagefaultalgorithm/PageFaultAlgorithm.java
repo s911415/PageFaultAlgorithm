@@ -85,58 +85,66 @@ public class PageFaultAlgorithm {
             readPage(algorithm, numberOfFrames, references);
         } else {
             final Scanner sc = new Scanner(System.in);
-            System.out.printf("Choose a page fault algorithm:%n");
-            System.out.printf("1. FIFO%n2. Second Chance%n3. LRU%n4. Optimal%n5. Random%n");
-            Algorithm algorithm = null;
-            while (algorithm == null) {
-                System.out.printf("Input[1-5]: ");
-                final String line = sc.nextLine();
-                try {
-                    final int n = Integer.parseInt(line) - 1;
-                    switch (n) {
-                        case 0:
-                            algorithm = Algorithm.FIFO;
-                            break;
-                        case 1:
-                            algorithm = Algorithm.SECOND_CHANGE;
-                            break;
-                        case 2:
-                            algorithm = Algorithm.LRU;
-                            break;
-                        case 3:
-                            algorithm = Algorithm.OPTIMAL;
-                            break;
-                        case 4:
-                            algorithm = Algorithm.RANDOM;
-                            break;
-                    }
-                } catch (final Exception ex) {
-                    // Nothing to do
-                }
-            }
-            int numberOfFrames = 0;
-            while (numberOfFrames <= 0) {
-                System.out.printf("Input the number of frames (>0): ");
-                final String line = sc.nextLine();
-                try {
-                    numberOfFrames = Integer.parseInt(line);
-                } catch (final Exception ex) {
-                    // Nothing to do
-                }
-            }
-            System.out.printf("Input the sequence of references (input # to end): ");
-            final ArrayList<String> al = new ArrayList<>();
+            keepRunningLabel:
             while (true) {
-                final String line = sc.next();
-                if ("#".equals(line)) {
-                    break;
+                System.out.printf("Choose a page fault algorithm:%n");
+                System.out.printf("1. FIFO%n2. Second Chance%n3. LRU%n4. Optimal%n5. Random%n");
+                Algorithm algorithm = null;
+                while (algorithm == null) {
+                    System.out.printf("Input[1-5]: ");
+                    if (!sc.hasNextLine()) {
+                        break keepRunningLabel;
+                    }
+                    final String line = sc.nextLine();
+                    try {
+                        final int n = Integer.parseInt(line) - 1;
+                        switch (n) {
+                            case 0:
+                                algorithm = Algorithm.FIFO;
+                                break;
+                            case 1:
+                                algorithm = Algorithm.SECOND_CHANGE;
+                                break;
+                            case 2:
+                                algorithm = Algorithm.LRU;
+                                break;
+                            case 3:
+                                algorithm = Algorithm.OPTIMAL;
+                                break;
+                            case 4:
+                                algorithm = Algorithm.RANDOM;
+                                break;
+                        }
+                    } catch (final Exception ex) {
+                        // Nothing to do
+                    }
                 }
-                al.add(line);
-            }
-            final String[] references = new String[al.size()];
-            al.toArray(references);
+                int numberOfFrames = 0;
+                while (numberOfFrames <= 0) {
+                    System.out.printf("Input the number of frames (>0): ");
+                    final String line = sc.nextLine();
+                    try {
+                        numberOfFrames = Integer.parseInt(line);
+                    } catch (final Exception ex) {
+                        // Nothing to do
+                    }
+                }
+                System.out.printf("Input the sequence of references (input # to end): ");
+                final ArrayList<String> al = new ArrayList<>();
+                while (true) {
+                    final String line = sc.next();
+                    if ("#".equals(line)) {
+                        break;
+                    }
+                    al.add(line);
+                }
+                final String[] references = new String[al.size()];
+                al.toArray(references);
 
-            readPage(algorithm, numberOfFrames, references);
+                readPage(algorithm, numberOfFrames, references);
+
+                System.out.println("--------------------------------------------------\n\n");
+            }
         }
     }
 
