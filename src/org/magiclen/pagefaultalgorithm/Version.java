@@ -31,7 +31,7 @@ public final class Version {
     /**
      * 副版本號碼。當程式新增了功能，將會調整這項數值。
      */
-    public static final int MINOR = 1;
+    public static final int MINOR = 2;
     /**
      * 維護版本號碼。當程式優化或是修正了一些問題，將會調整這項數值。
      */
