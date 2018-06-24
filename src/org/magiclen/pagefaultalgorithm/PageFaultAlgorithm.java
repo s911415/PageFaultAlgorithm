@@ -53,6 +53,7 @@ public class PageFaultAlgorithm {
             switch (algorithmString) {
                 case "fifo":
                 case "first-in-first-out":
+                case "1":
                     algorithm = Algorithm.FIFO;
                     break;
                 case "second-chance":
@@ -60,16 +61,20 @@ public class PageFaultAlgorithm {
                 case "clock":
                 case "cr":
                 case "sc":
+                case "2":
                     algorithm = Algorithm.SECOND_CHANGE;
                     break;
                 case "lru":
                 case "least-recently-used":
+                case "3":
                     algorithm = Algorithm.LRU;
                     break;
                 case "optimal":
+                case "4":
                     algorithm = Algorithm.OPTIMAL;
                     break;
                 case "random":
+                case "5":
                     algorithm = Algorithm.RANDOM;
                     break;
                 default:
@@ -193,6 +198,7 @@ public class PageFaultAlgorithm {
      * @param references     input the sequence of references
      */
     private static int optimal(final Frame frames[], final int numberOfFrames, final String... references) {
+        FrameLogger frameLogger = new FrameLogger(numberOfFrames, references.length);
         // Initialize victim
         int victim = 0;
 
@@ -275,10 +281,14 @@ public class PageFaultAlgorithm {
 
             for (int i = 0; i < numberOfFrames; ++i) {
                 final Frame frame = frames[i];
+                frameLogger.setValue(i, n, frame.reference);
                 System.out.printf("\tFrame %d%s:%n\t\tReference: %s%n\t\tNext Reference Sequence: %s%n", i + 1, (i == victim) ? "(victim)" : "", frame.reference, (nextSequence[i] == -1) ? "Undefined" : (nextSequence[i] == 0) ? "No" : String.valueOf(nextSequence[i]));
             }
             System.out.printf("%n");
         }
+
+        System.out.printf("\n%s\n", frameLogger.toString());
+
         return numberOfPageFault;
     }
 
@@ -290,6 +300,7 @@ public class PageFaultAlgorithm {
      * @param references     input the sequence of references
      */
     private static int LRU(final Frame frames[], final int numberOfFrames, final String... references) {
+        FrameLogger frameLogger = new FrameLogger(numberOfFrames, references.length);
         // Use linked list to store the index of frames, the order of the list is the order of victims. The larger index, the more recent frame.
         final LinkedList<Integer> list = new LinkedList<>();
 
@@ -348,10 +359,14 @@ public class PageFaultAlgorithm {
             for (int i = 0; i < numberOfFrames; ++i) {
                 final Frame frame = frames[i];
                 final int recentOrder = list.indexOf(i);
+                frameLogger.setValue(i, n, frame.reference);
                 System.out.printf("\tFrame %d%s:%n\t\tReference: %s%n\t\tRecent Order: %d%n", i + 1, (recentOrder == 0) ? "(least recently used)" : "", frame.reference, recentOrder);
             }
             System.out.printf("%n");
         }
+
+        System.out.printf("\n%s\n", frameLogger.toString());
+
         return numberOfPageFault;
     }
 
@@ -363,6 +378,7 @@ public class PageFaultAlgorithm {
      * @param references     input the sequence of references
      */
     private static int FIFO(final Frame frames[], final int numberOfFrames, final String... references) {
+        FrameLogger frameLogger = new FrameLogger(numberOfFrames, references.length);
         // Initialize victim
         int victim = 0;
 
@@ -409,10 +425,14 @@ public class PageFaultAlgorithm {
             }
             for (int i = 0; i < numberOfFrames; ++i) {
                 final Frame frame = frames[i];
+                frameLogger.setValue(i, n, frame.reference);
                 System.out.printf("\tFrame %d%s:%n\t\tReference: %s%n", i + 1, (i == victim) ? "(victim)" : "", frame.reference);
             }
             System.out.printf("%n");
         }
+
+        System.out.printf("\n%s\n", frameLogger.toString());
+
         return numberOfPageFault;
     }
 
@@ -424,6 +444,7 @@ public class PageFaultAlgorithm {
      * @param references     input the sequence of references
      */
     private static int secondChance(final Frame frames[], final int numberOfFrames, final String... references) {
+        FrameLogger frameLogger = new FrameLogger(numberOfFrames, references.length);
         // Initialize victim
         int victim = 0;
 
@@ -477,10 +498,14 @@ public class PageFaultAlgorithm {
             }
             for (int i = 0; i < numberOfFrames; ++i) {
                 final Frame frame = frames[i];
+                frameLogger.setValue(i, n, frame.reference);
                 System.out.printf("\tFrame %d%s:%n\t\tReference: %s%n\t\tReference Bit: %d%n", i + 1, (i == victim) ? "(victim)" : "", frame.reference, frame.usebit);
             }
             System.out.printf("%n");
         }
+
+        System.out.printf("\n%s\n", frameLogger.toString());
+
         return numberOfPageFault;
     }
 
@@ -492,6 +517,7 @@ public class PageFaultAlgorithm {
      * @param references     input the sequence of references
      */
     private static int random(final Frame frames[], final int numberOfFrames, final String... references) {
+        FrameLogger frameLogger = new FrameLogger(numberOfFrames, references.length);
         // Initialize victim
         int victim = 0;
 
@@ -544,27 +570,15 @@ public class PageFaultAlgorithm {
             }
             for (int i = 0; i < numberOfFrames; ++i) {
                 final Frame frame = frames[i];
+                frameLogger.setValue(i, n, frame.reference);
                 System.out.printf("\tFrame %d%s:%n\t\tReference: %s%n", i + 1, (i == victim) ? "(victim)" : "", frame.reference);
             }
             System.out.printf("%n");
         }
+
+        System.out.printf("\n%s\n", frameLogger.toString());
+
         return numberOfPageFault;
     }
 }
 
-/**
- * The structure of Frame.
- *
- * @author Magic Len
- */
-class Frame {
-
-    String reference; // Use string to represent a reference.
-    byte usebit; // Reference bit. If the frame is referenced, set this use bit.
-
-    Frame() {
-        // Initialize
-        reference = null;
-        usebit = 0;
-    }
-}
